@@ -53,15 +53,39 @@
         a:hover {
             text-decoration: underline;
         }
+
+        li {
+            border: 2px solid #3498db; /* Blue border */
+            padding: 10px; /* Add some padding inside the border */
+            border-radius: 5px; /* Optional: Rounded corners */
+            margin-top: 10px; /* Optional: Add some spacing above the list */
+            text-align: center; /* Center the text */
+        }
     </style>
 </head>
 <body>
 
 <h2>Vacancies Added in the 2025-03</h2>
 
+<div style="text-align: right; margin-top: 20px;">
+    <button id="rerenderChartButton" style="padding: 10px 20px; font-size: 16px;">Rerender Chart</button>
+</div>
+
 <!-- Chart Container -->
 <div style="width: 80%; margin: 0 auto;">
     <canvas id="vacanciesChart"></canvas>
+</div>
+
+<div>
+    <h2>Vacancies watched on this two link:</h2>
+    <ul>
+        <li>
+            <a href="https://jobs.dou.ua/vacancies/?category=.NET&exp=1-3" target="_blank">DOU</a>
+        </li>
+        <li>
+            <a href="https://djinni.co/jobs/?primary_keyword=.NET&primary_keyword=Dotnet%20Cloud&primary_keyword=Dotnet%20Web&primary_keyword=ASP.NET&primary_keyword=Blazor&exp_level=1y&exp_level=2y" target="_blank">Djinni</a>
+        </li>
+    </ul>
 </div>
 
 <!-- Table Container -->
@@ -147,11 +171,19 @@
     // ===========================
     // Create Chart
     // ===========================
+    let chartInstance; // Store the chart instance globally
+
     function renderChart() {
         const { labels, counts } = createChartData();
 
         const ctx = document.getElementById('vacanciesChart').getContext('2d');
-        new Chart(ctx, {
+
+        // Destroy the existing chart instance if it exists
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        chartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -223,6 +255,11 @@
         renderChart();
         renderTable();
     }
+
+    // Add event listener to the button to rerender the chart
+    document.getElementById('rerenderChartButton').addEventListener('click', () => {
+        renderChart();
+    });
 
     // Fetch data and initialize on page load
     window.onload = () => {
